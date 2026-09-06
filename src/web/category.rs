@@ -171,7 +171,7 @@ async fn create_category(
             .await;
 
             match insert_result {
-                Ok(_) => Redirect::to("/web/categories/?action=created").into_response(),
+                Ok(_) => Redirect::to("/web/categories?action=created").into_response(),
                 Err(sqlx::Error::Database(db_err)) if db_err.code().as_deref() == Some("23505") => {
                     let err_msg = format!("الفئة \"{}\" مسجلة بالفعل", form.name_ar);
                     return FormPage {
