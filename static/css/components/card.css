@@ -1,0 +1,104 @@
+/* الشبكة التكيفية للبطاقات */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+}
+
+/* التنسيق الأساسي للبطاقة */
+.card {
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* هيدر البطاقة */
+.card__header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #f3f4f6;
+  background-color: #ffffff;
+  font-weight: 600;
+  color: #111827;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* جسم البطاقة (يتمدد لملء الفراغ) */
+.card__body {
+  padding: 1.25rem;
+  flex: 1;
+  color: #374151;
+  line-height: 1.5;
+}
+
+/* فوتر البطاقة */
+.card__footer {
+  padding: 0.85rem 1.25rem;
+  border-top: 1px solid #f3f4f6;
+  background-color: #f9fafb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.card__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.flash-messages {
+  width: 100%;
+  margin-bottom: 1.5rem;
+  min-height: 3rem; /* Preserves vertical layout space */
+}
+
+/* Base flash alert style */
+.flash {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  
+  /* Layout reservation & visibility handling */
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+/* Modifier when a message is active/visible */
+.flash.show {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Success state */
+.flash-success {
+  background-color: #ecfdf5;
+  color: #065f46;
+  border-color: #a7f3d0;
+}
+
+/* Error state */
+.flash-error {
+  background-color: #fef2f2;
+  color: #991b1b;
+  border-color: #fecaca;
+}

@@ -1,0 +1,581 @@
+/* --- static/css/base/reset.css --- */
+/*################## Css/bse/reset.css ###### */
+/* 1. Global Box Sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* 2. Remove default browser spacing */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/* 3. Core Body & Root Setup */
+html {
+  color-scheme: light dark;
+}
+
+body {
+  min-height: 100vh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 4. Responsive Media Defaults */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* 5. Typography & Text Wrapping */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* 6. Form Control Typography Inheritance */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+/* 7. Button and List Cleanup */
+button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+ul {
+  list-style: none;
+}
+
+a,
+a:hover,
+a:focus,
+a:active {
+  text-decoration: none;
+}
+
+/*################## End Of Css/bse/reset.css ########## */
+
+/* --- static/css/base/page-grid.css --- */
+.page-layout {
+  display: grid;
+  min-height: 100vh;
+  direction: rtl;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 260px 1fr;
+  grid-template-areas:
+    "header header"
+    "aside  main"
+    "footer footer";
+}
+
+.page-layout > header {
+  grid-area: header;
+  
+}
+
+.page-layout > aside {
+  grid-area: aside;
+  position: sticky;
+  top: 0; /* Distance from top of viewport */
+  align-self: start; /* Prevent grid item stretching, required for sticky */
+  max-height: 100vh; /* Keeps sidebar height constrained to screen */
+  overflow-y: auto; /* Enables scrolling inside aside if content is long */
+}
+
+.page-layout > main {
+  grid-area: main;
+  padding: 1.5rem;
+}
+
+.page-layout > footer {
+  grid-area: footer;
+}
+
+/* Mobile responsiveness: stacks vertically on small screens */
+@media (max-width: 768px) {
+  .page-layout {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "header"
+      "main"
+      "aside"
+      "footer";
+  }
+}
+/* --- static/css/components/header.css --- */
+.page-layout__header {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.page-layout__header__info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  white-space: nowrap;
+}
+
+.header__search {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 600px;
+  justify-self: center;
+}
+
+.header__action {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  white-space: nowrap;
+}
+
+/* التجاوب مع الشاشات الصغيرة */
+@media (max-width: 768px) {
+  .main-header {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "info action"
+      "search search";
+    gap: 1rem;
+  }
+
+  .header__info {
+    grid-area: info;
+  }
+
+  .header__action {
+    grid-area: action;
+  }
+
+  .header__search {
+    grid-area: search;
+    max-width: 100%;
+  }
+}
+
+/* Base Button Structure */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: inherit;
+  text-decoration: none;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Primary Button Modifier */
+.btn--primary {
+  background-color: #16a34a;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(22, 163, 74, 0.25);
+}
+
+.btn--primary:hover {
+  background-color: #15803d;
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.35);
+  transform: translateY(-1px);
+}
+
+.btn--primary:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 2px 4px rgba(22, 163, 74, 0.2);
+}
+
+/* Icon Animation */
+.btn svg {
+  transition: transform 0.25s ease;
+}
+
+.btn:hover svg {
+  transform: rotate(90deg);
+}
+
+/* Small Button Size Modifier */
+.btn--sm {
+  padding: 0.25rem 0.625rem;
+  font-size: 0.8125rem;
+}
+
+/* Text-Only Variant (Card Edit Button) */
+.btn--text {
+  background-color: transparent;
+  color: #2563eb;
+}
+
+.btn--text:hover {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+}
+
+/* Danger Text-Only Variant (Card Delete Button) */
+.btn--danger-text {
+  background-color: transparent;
+  color: #dc2626;
+}
+
+.btn--danger-text:hover {
+  background-color: #fef2f2;
+  color: #b91c1c;
+}
+/* --- static/css/components/card.css --- */
+/* الشبكة التكيفية للبطاقات */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+}
+
+/* التنسيق الأساسي للبطاقة */
+.card {
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* هيدر البطاقة */
+.card__header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #f3f4f6;
+  background-color: #ffffff;
+  font-weight: 600;
+  color: #111827;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* جسم البطاقة (يتمدد لملء الفراغ) */
+.card__body {
+  padding: 1.25rem;
+  flex: 1;
+  color: #374151;
+  line-height: 1.5;
+}
+
+/* فوتر البطاقة */
+.card__footer {
+  padding: 0.85rem 1.25rem;
+  border-top: 1px solid #f3f4f6;
+  background-color: #f9fafb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.card__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.flash-messages {
+  width: 100%;
+  margin-bottom: 1.5rem;
+  min-height: 3rem; /* Preserves vertical layout space */
+}
+
+/* Base flash alert style */
+.flash {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  
+  /* Layout reservation & visibility handling */
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+/* Modifier when a message is active/visible */
+.flash.show {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Success state */
+.flash-success {
+  background-color: #ecfdf5;
+  color: #065f46;
+  border-color: #a7f3d0;
+}
+
+/* Error state */
+.flash-error {
+  background-color: #fef2f2;
+  color: #991b1b;
+  border-color: #fecaca;
+}
+/* --- static/css/components/main-content.css --- */
+/* Flash Messages Container */
+.flash-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    width: 100%;
+}
+
+/* Base Flash Alert Style */
+.flash {
+    display: flex;
+    align-items: center;
+    padding: 0.875rem 1.25rem;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Active State */
+.flash.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Success Variant */
+.flash--success {
+    background-color: #ecfdf5;
+    color: #065f46;
+    border-color: #a7f3d0;
+}
+
+/* Error Variant */
+.flash--error {
+    background-color: #fef2f2;
+    color: #991b1b;
+    border-color: #fecaca;
+}
+
+/* Inner Text */
+.flash-messages__text {
+    margin: 0;
+    font-weight: 500;
+}
+/* --- static/css/components/search.css --- */
+/* ==================== Universal Search Bar & Dropdown ==================== */
+.search-container {
+  position: relative;
+  width: 320px;
+}
+
+.search-input {
+  width: 100%;
+  height: 42px;
+  padding: 0 16px;
+  font-size: 0.95rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background-color: var(--surface);
+  color: var(--text-primary);
+  outline: none;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.search-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.search-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  max-height: 280px;
+  overflow-y: auto;
+  text-align: right;
+}
+
+.search-dropdown:empty {
+  display: none;
+}
+
+.search-no-results {
+  padding: 12px 16px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  text-align: center;
+}
+
+.search-results-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.search-result-item {
+  border-bottom: 1px solid var(--border);
+}
+
+.search-result-item:last-child {
+  border-bottom: none;
+}
+
+.search-result-link,
+.search-dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  text-decoration: none;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border);
+  transition: background-color 0.15s ease;
+}
+
+.search-dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.search-result-link:hover,
+.search-dropdown-item:hover {
+  background-color: #f8fafc;
+}
+
+.search-result-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.search-result-info .name-ar,
+.search-dropdown-item .item-name-ar {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.search-result-info .name-en,
+.search-dropdown-item .item-name-en {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.search-dropdown-item.no-results {
+  color: var(--text-secondary);
+  justify-content: center;
+  font-size: 0.9rem;
+  padding: 14px;
+}
+/* --- static/css/components/form.css --- */
+/* ==================== Forms & Inputs ==================== */
+.field {
+  margin-bottom: 16px;
+}
+
+.field label {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: var(--text-primary);
+}
+
+.field input,
+.field textarea,
+.field select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  font-family: inherit;
+  font-size: 14px;
+  background: #FAFBFC;
+  color: var(--text-primary);
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: #fff;
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 70px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
