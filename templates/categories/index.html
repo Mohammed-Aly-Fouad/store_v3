@@ -15,28 +15,8 @@
         <div class="header__info">
             <h1 class="header__title">إدارة الفئات</h1>
         </div>
-        <div class="header__search">
-            <input 
-                type="search" 
-                name="header-search" 
-                id="header-search" 
-                class="header__search-input" 
-                placeholder="بحث عن فئة..." 
-                aria-label="بحث عن فئة"
-            >
-        </div>
-
-        <div class="header__action">
-            <a href="/web/categories/new" class="btn btn--primary">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
-                <span>إضافة فئة</span>
-            </a>
-        </div>
-          <!-- Search Bar -->
-    <div class="search-container" style="position: relative;">
+         <!-- Search Bar -->
+    <div class="search-container header__search" style="position: relative;">
         <input 
             type="search" 
             name="q" 
@@ -51,6 +31,17 @@
         <!-- HTMX will inject brand_search_results.html directly INTO here -->
         <div id="search-results-dropdown" class="search-dropdown"></div>
     </div>
+
+        <div class="header__action">
+            <a href="/web/categories/new" class="btn btn--primary">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span>إضافة فئة</span>
+            </a>
+        </div>
+         
     </header>
 
     <aside class="sidebar">

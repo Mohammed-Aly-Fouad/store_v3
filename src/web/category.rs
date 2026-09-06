@@ -254,9 +254,6 @@ async fn show_category(
             vec![]
         }
     };
-
-    //#########################################
-
     ChildrenTemplate {
         children,
         error_message: None,

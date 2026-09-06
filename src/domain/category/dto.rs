@@ -228,6 +228,8 @@ pub struct FlashParams {
     pub action: Option<String>,
     pub error: Option<String>,
 }
+
+
 /// Partial HTML snippet template for HTMX/Dynamic live category search.
 #[derive(Template, WebTemplate)]
 #[template(path = "categories/category_search_results.html")]
