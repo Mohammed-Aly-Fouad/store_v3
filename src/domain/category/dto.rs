@@ -160,9 +160,18 @@ pub struct CategoryTemplate {
     pub current_page: String,
 }
 
+#[derive(Template, WebTemplate)]
+#[template(path = "categories/category_detail.html")]
+pub struct CategoryDetailTemplate {
+    pub category_tree: Vec<CategoryTree>,
+    pub error_message: Option<String>,
+    pub success_message: Option<String>,
+    pub current_page: String,
+}
+
 
 #[derive(Template, WebTemplate)]
-#[template(path = "categories/category_form.html")]
+#[template(path = "categories/category_create_form.html")]
 pub struct FormPage {
     pub category_tree: Vec<CategoryTree>,
     pub form: CategoryFormDTO,
@@ -172,7 +181,16 @@ pub struct FormPage {
     pub success_message: Option<String>
 }
 
-
+#[derive(Template, WebTemplate)]
+#[template(path = "categories/category_edit_form.html")]
+pub struct EditFormPage {
+    pub category_tree: Vec<CategoryTree>,
+    pub form: CategoryFormDTO,
+    pub errors: Option<CategoryFormErrors>,
+    pub current_page: String,
+    pub error_message: Option<String>,
+    pub success_message: Option<String>
+}
 
 #[derive(Template, WebTemplate)]
 #[template(path = "categories/children.html")]

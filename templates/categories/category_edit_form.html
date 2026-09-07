@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة الفئات - مكتب نور</title>
+    <script src="/static/js/main.js" defer></script>
+    <link rel="stylesheet" href="../../static/css/main.css">
+</head>
+
+<body class="page-layout">
+    <header class="header">
+        <div class="header__info">
+            <h1 class="header__title">إدارة الفئات</h1>
+        </div>
+        <div class="header__search">
+            <input type="search" name="header-search" id="header-search" class="header__search-input"
+                placeholder="بحث عن فئة..." aria-label="بحث عن فئة">
+        </div>
+
+        <div class="header__action">
+            <a href="/web/categories" class="btn btn--primary" >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span>الرجوع إلى الفئات الرئيسية</span>
+            </a>
+        </div>
+    </header>
+
+    <aside class="sidebar">
+        <h2 class="sidebar__title">لوحة التحكم</h2>
+        <nav class="nav">
+            <ul class="nav__list">
+                <li class="nav__item">
+                    <a href="/categories" class="nav__link nav__link--active">إدارة الفئات</a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <section class="categories">
+            <div class="categories__header">
+                <h2 class="categories__title">الفئات الرئيسية</h2>
+                <span class="categories__counter">({{ category_tree.len() }})</span>
+            </div>
+
+            <div class="flash-messages">
+                {% if let Some(msg) = success_message %}
+                <div role="status" class="flash flash--success show">
+                    <p class="flash-messages__text">{{ msg }}</p>
+                </div>
+                {% endif %}
+
+                {% if let Some(msg) = error_message %}
+                <div role="alert" class="flash flash--error show">
+                    <p class="flash-messages__text">{{ msg }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </section>
+         <form method="post" action="/web/categories">
+<div class="field">
+    <label for="name_en">الاسم بالإنجليزية</label>
+    <input type="text" id="name_en" name="name_en" placeholder="e.g. Pencils" value="{{ form.name_en }}">
+    {% if let Some(errs) = errors %}
+    {% if let Some(err) = errs.name_en %}
+    <span class="error-message" style="color: #dc2626; font-size: 0.85rem; margin-top: 4px; display: block;">
+        {{ err }}
+    </span>
+    {% endif %}
+    {% endif %}
+</div>
+<div class="field">
+    <label for="name_ar">الاسم بالعربية</label>
+    <input type="text" id="name_ar" name="name_ar" placeholder="e.g. قلم رصاص" value="{{ form.name_ar }}">
+    {% if let Some(errs) = errors %}
+    {% if let Some(err) = errs.name_ar %}
+    <span class="error-message" style="color: #dc2626; font-size: 0.85rem; margin-top: 4px; display: block;">
+        {{ err }}
+    </span>
+    {% endif %}
+    {% endif %}
+</div>
+<!-- الملاحظات -->
+<div class="field" style="margin-top: 1rem;">
+    <label for="notes">ملاحظات (اختياري)</label>
+    <textarea id="notes" name="notes"
+        placeholder="أي ملاحظات إضافية عن الفئة">{% if let Some(notes) = form.notes %}{{ notes }}{% endif %}</textarea>
+    {% if let Some(errs) = errors %}
+    {% if let Some(err) = errs.notes %}
+    <span class="error-message" style="color: #dc2626; font-size: 0.85rem; margin-top: 4px; display: block;">
+        {{ err }}
+    </span>
+    {% endif %}
+    {% endif %}
+</div>
+<div class="field">
+<label for="parent_name">اختر الفئة</label>
+<select id="parent_name"  name="parent_name">
+    <option value="" {% if form.parent_name.is_none() %}selected{% endif %}>فئة رئيسية</option>
+
+    {% for category in category_tree %}
+        {% let is_selected = form.parent_name.as_deref() == Some(category.main.name_ar.as_str()) %}
+        <option value="{{ category.main.name_ar }}" {% if is_selected %}selected{% endif %}>
+            {{ category.main.name_ar }}
+        </option>
+    {% endfor %}
+</select>
+</div>
+
+<div class="form-actions" style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+        <button type="submit" class="btn btn-primary">إضافة الفئة</button>
+        <a href="/web/categories" class="btn btn-ghost">إلغاء</a>
+      </div>
+
+    </form>
+    </main>
+
+    <footer class="page-footer">
+        <p>جميع الحقوق محفوظة لمكتب نور</p>
+    </footer>
+</body>
+
+</html>

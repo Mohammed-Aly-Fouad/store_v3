@@ -89,9 +89,10 @@
                         <ol class="card__sub-list">
                             {% for sub in category.subs %}
                             <li class="card__sub-item">
-                                <a href="/web/categories/{{ sub.id }}" class="card__sub-link">
+                               <p>
                                     {{ sub.name_ar }}
-                                </a>
+                               </p> 
+                                
                             </li>
                             {% endfor %}
                         </ol>
@@ -107,7 +108,7 @@
                         <div class="card__actions">
 
                             {% if category.subs.is_empty()%}
-                            <a href="/web/categories/{{ category.main.id }}" class="btn btn--sm btn--text">تعديل</a>
+                            <a href="/web/categories/{{ category.main.id }}/edit" class="btn btn--sm btn--text">تعديل</a>
                            <form action="/web/categories/{{ category.main.id }}/delete" method="POST" class="inline-form">
                                 <button type="submit" class="btn btn--sm btn--danger-text">حذف</button>
                             </form>

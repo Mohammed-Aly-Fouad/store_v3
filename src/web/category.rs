@@ -9,8 +9,9 @@ use axum::routing::{get, post};
 use axum::{Extension, Form, Json, Router};
 use sqlx::encode::IsNull::No;
 
+use crate::domain::category;
 use crate::domain::category::dto::{
-    CategoryFormDTO, CategoryResponseDTO, CategorySearchQuery, CategorySearchResultsTemplate, CategoryTemplate, CategoryTree, ChildrenTemplate, FlashParams, FormPage,
+    CategoryDetailTemplate, CategoryFormDTO, CategoryResponseDTO, CategorySearchQuery, CategorySearchResultsTemplate, CategoryTemplate, CategoryTree, ChildrenTemplate, FlashParams, FormPage,
 };
 use crate::main;
 use crate::state::{self, AppState};
@@ -47,6 +48,34 @@ async fn get_all_categories(state: &AppState) -> Result<Vec<CategoryResponseDTO>
         FROM categories c
         ORDER BY c.id DESC;
         "#
+    )
+    .fetch_all(&state.pool)
+    .await
+}
+
+//#########################################
+//#########  get Node (main with subs)  ################################
+//#########################################
+async fn get_category_branch(
+    state: &AppState,
+    id: i64,
+) -> Result<Vec<CategoryResponseDTO>, sqlx::Error> {
+    sqlx::query_as!(
+        CategoryResponseDTO,
+        r#"
+        SELECT
+    c.id,
+    c.name_en,
+    c.name_ar,
+    c.parent_id,
+    c.notes,
+    c.created_at,
+    c.updated_at
+FROM categories c
+WHERE c.id = $1 OR c.parent_id = $1
+ORDER BY c.parent_id IS NOT NULL, c.id DESC;
+        "#,
+        id
     )
     .fetch_all(&state.pool)
     .await
@@ -94,7 +123,7 @@ pub async fn render_categories_page(
 //#########################################
 //########## render create page     ###############################
 //#########################################
-
+#[axum::debug_handler]
 async fn render_new_category_page(
     State(state): State<AppState>,
     Query(params): Query<FlashParams>,
@@ -208,7 +237,21 @@ async fn render_category_detail_page(
     Path(id): Path<i64>,
     Query(params): Query<FlashParams>,
 ) -> impl IntoResponse {
-    Json("Category Details Page")
+    let node = match get_category_branch(&state, id).await {
+        Ok(categories) => categories,
+        Err(err) => {
+            tracing::error!("فشل جلب الفئات: {:#?}", err);
+            return Redirect::to("/web/categories?error=server_error").into_response();
+        }
+    }; 
+    let category_tree = CategoryTree::build_tree(node);
+    // Json(category_tree).into_response()
+    CategoryDetailTemplate {
+        category_tree,
+        success_message: None,
+        error_message: None,
+        current_page: "categories".to_string(),
+    }.into_response()
 }
 
 //#########################################
@@ -219,8 +262,62 @@ async fn render_edit_category_page(
     State(state): State<AppState>,
     Path(id): Path<i64>,
     Query(params): Query<FlashParams>,
-) -> impl IntoResponse {
-    Json("Edit Page")
+) -> Response {
+let all_categories = match get_all_categories(&state).await {
+        Ok(categories) => categories,
+        Err(err) => {
+            tracing::error!("فشل جلب الفئات: {:#?}", err);
+            return Redirect::to("/web/categories?error=server_error").into_response();
+        }
+    };
+
+    let category_tree = CategoryTree::build_tree(all_categories);
+
+    let category = sqlx::query_as!(
+        CategoryFormDTO,
+        r#"SELECT
+        c.name_en,
+        c.name_ar,
+        c.notes,
+        p.name_ar AS "parent_name?"
+    FROM categories c
+    LEFT JOIN categories p ON c.parent_id = p.id
+    WHERE c.id = $1"#,
+    id,
+    ).fetch_optional(&state.pool)
+    .await;
+    
+    match category {
+        Ok(Some(cat)) => {
+            let form = CategoryFormDTO {
+                name_ar: cat.name_ar,
+                name_en: cat.name_en,
+                parent_name: cat.parent_name,
+                notes: cat.notes,
+               
+            };
+
+  FormPage {
+                            form,
+                            category_tree,
+                            error_message: None,
+                            success_message: None,
+                            errors: None,
+                            current_page: "categories".to_string(),
+                        }
+                        .into_response()
+
+                    }
+            Ok(None) => {
+                Redirect::to("/web/categories?error=not_found").into_response()
+            }
+
+            Err(e) => {
+                tracing::error!("Failed to fetch category for edit: {:?}", e);
+                Redirect::to("/web/categories?error=db_error").into_response()
+        }
+    }
+    
 }
 
 // ###########################################
