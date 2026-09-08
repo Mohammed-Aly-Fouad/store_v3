@@ -1,145 +1,22 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
+{% extends "base.html" %}
+{% block header %}
+{% include "components/header.html"%}
+{% endblock %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إدارة الفئات - مكتب نور</title>
-    <script src="/static/js/main.js" defer></script>
-     <script src="https://unpkg.com/htmx.org@2.0.0"></script>
-    <link rel="stylesheet" href="../../static/css/main.css">
-</head>
-
-<body class="page-layout">
-    <header class="header">
-        <div class="header__info">
-            <h1 class="header__title">إدارة الفئات</h1>
+{% block aside %}
+{% include "components/aside.html"%}
+{% endblock %}
+{% block main_content %}
+<main class="main-content">
+    <section class="categories">
+        <div class="categories__header">
+            <h2 class="categories__title">الفئات الرئيسية</h2>
+            <span class="categories__counter">({{ category_tree.len() }})</span>
         </div>
-         <!-- Search Bar -->
-    <div class="search-container header__search" style="position: relative;">
-        <input 
-            type="search" 
-            name="q" 
-            class="search-input" 
-            placeholder="بحث عن فئة..." 
-            autocomplete="off"
-            hx-get="/web/categories/search" 
-            hx-trigger="keyup changed delay:300ms, search" 
-            hx-target="#search-results-dropdown" 
-        />
-        
-        <!-- HTMX will inject brand_search_results.html directly INTO here -->
-        <div id="search-results-dropdown" class="search-dropdown"></div>
-    </div>
+        {% include "components/flash_messages.html" %}
+        {% include "components/card.html" %}
 
-        <div class="header__action">
-            <a href="/web/categories/new" class="btn btn--primary">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
-                <span>إضافة فئة</span>
-            </a>
-        </div>
-         
-    </header>
-
-    <aside class="sidebar">
-        <h2 class="sidebar__title">لوحة التحكم</h2>
-        <nav class="nav">
-            <ul class="nav__list">
-                <li class="nav__item">
-                    <a href="/web/categories" class="nav__link nav__link--active">إدارة الفئات</a>
-                </li>
-            </ul>
-        </nav>
-    </aside>
-
-    <main class="main-content">
-        <section class="categories">
-            <div class="categories__header">
-                <h2 class="categories__title">الفئات الرئيسية</h2>
-                <span class="categories__counter">({{ category_tree.len() }})</span>
-            </div>
-
-            <div class="flash-messages">
-    {% if let Some(msg) = success_message %}
-    <div role="status" class="flash flash--success show">
-        <p class="flash-messages__text">{{ msg }}</p>
-    </div>
-    {% endif %}
-
-    {% if let Some(msg) = error_message %}
-    <div role="alert" class="flash flash--error show">
-        <p class="flash-messages__text">{{ msg }}</p>
-    </div>
-    {% endif %}
-</div>
-
-            <div class="cards-grid">
-                {% for category in category_tree %}
-                <article class="card">
-                    <header class="card__header">
-                        <h3 class="card__title">{{ category.main.name_ar }}</h3>
-                        <span class="card__counter">({{ category.subs.len() }})</span>
-                    </header>
-
-                    <div class="card__body">
-                        {% if !category.subs.is_empty() %}
-                        <ol class="card__sub-list">
-                            {% for sub in category.subs %}
-                            <li class="card__sub-item">
-                               <p>
-                                    {{ sub.name_ar }}
-                               </p> 
-                                
-                            </li>
-                            {% endfor %}
-                        </ol>
-                        {% else %}
-                        <p class="card__empty-note">لا يوجد فئات فرعية</p>
-                        {% endif %}
-                    </div>
-
-                    <footer class="card__footer">
-                        <time datetime="{{ category.main.created_at.format("%Y-%m-%d") }}" class="card__date">
-                            {{ category.main.created_at.format("%Y-%m-%d") }}
-                        </time>
-                        <div class="card__actions">
-
-                            {% if category.subs.is_empty()%}
-                            <a href="/web/categories/{{ category.main.id }}/edit" class="btn btn--sm btn--text">تعديل</a>
-
-
-
-                            <!-- <button 
-    hx-delete="/web/categories/{{ category.main.id }}/delete" 
-    hx-confirm="تنبيه: هل أنت متأكد من حذف هذه الفئة؟ قد يؤدي ذلك لتأثر البيانات المرتبطة بها."
-    class="btn btn-danger">
-    حذف
-</button> -->
-
-
-                           <form action="/web/categories/{{ category.main.id }}/delete" method="POST" class="inline-form delete-form">
-                                <button type="submit" class="btn btn--sm btn--danger-text">حذف</button>
-                            </form>
-                           {% else %}
-                            <a href="/web/categories/{{ category.main.id }}" class="btn btn--sm btn--text">تعديل</a>
-                            {% endif %}
-                             
-                        </div>
-                    </footer>
-                </article>
-                {% else %}
-                <p class="cards-grid__empty">من فضلك اضغط على زر إضافة لإضافة فئات جديدة</p>
-                {% endfor %}
-            </div>
-        </section>
-    </main>
-
-    <footer class="page-footer">
-        <p>جميع الحقوق محفوظة لمكتب نور</p>
-    </footer>
-</body>
-
-</html>
+    </section>
+</main>
+{% include "components/footer.html" %}
+{% endblock %}

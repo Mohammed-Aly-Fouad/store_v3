@@ -1,0 +1,13 @@
+<div class="flash-messages">
+    {% if let Some(msg) = success_message %}
+    <div role="status" class="flash flash--success show">
+        <p class="flash-messages__text">{{ msg }}</p>
+    </div>
+    {% endif %}
+
+    {% if let Some(msg) = error_message %}
+    <div role="alert" class="flash flash--error show">
+        <p class="flash-messages__text">{{ msg }}</p>
+    </div>
+    {% endif %}
+</div>

@@ -6,7 +6,6 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Deserializer, Serialize};
 use sqlx::prelude::FromRow;
 
-use crate::domain::category;
 
 // pub fn empty_number_as_none<'de, D, T>(deserializer: D) -> Result<Option<T>, D::Error>
 // where
@@ -191,15 +190,6 @@ pub struct EditFormPage {
     pub error_message: Option<String>,
     pub success_message: Option<String>,
     pub id: i64,
-}
-
-#[derive(Template, WebTemplate)]
-#[template(path = "categories/children.html")]
-pub struct ChildrenTemplate {
-    pub children: Vec<CategoryResponseDTO>,
-    pub error_message: Option<String>,
-    pub success_message: Option<String>,
-    pub current_page: String,
 }
 
 

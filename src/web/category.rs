@@ -12,7 +12,7 @@ use sqlx::encode::IsNull::No;
 
 use crate::domain::category;
 use crate::domain::category::dto::{
-    CategoryDetailTemplate, CategoryFormDTO, CategoryResponseDTO, CategorySearchQuery, CategorySearchResultsTemplate, CategoryTemplate, CategoryTree, ChildrenTemplate, CreateFormPage, EditFormPage, FlashParams,
+    CategoryDetailTemplate, CategoryFormDTO, CategoryResponseDTO, CategorySearchQuery, CategorySearchResultsTemplate, CategoryTemplate, CategoryTree, CreateFormPage, EditFormPage, FlashParams,
 };
 use crate::main;
 use crate::state::{self, AppState};
@@ -492,43 +492,7 @@ async fn delete_category(
 
 
 
-async fn show_category(
-    State(state): State<AppState>,
-    Path(id): Path<i64>,
-    Query(params): Query<FlashParams>,
-) -> impl IntoResponse {
-    let success_message = match params.action.as_deref() {
-        Some("created") => Some("تم إضافة الفئة بنجاح".to_string()),
-        Some("updated") => Some("تم تعديل الفئة بنجاح".to_string()),
-        Some("deleted") => Some("تم حذف الفئة بنجاح".to_string()),
-        _ => None,
-    };
 
-    let error_message = match params.error.as_deref() {
-        Some("not_found") => Some("غير موجود بقاعدة البيانات".to_string()),
-        Some("db_error") => Some("خطأ عام بقاعدة البيانات".to_string()),
-        _ => None,
-    };
-    let result = sqlx::query_as!(
-        CategoryResponseDTO,
-        r#"SELECT id, name_ar, name_en, parent_id, notes, created_at, updated_at FROM categories WHERE parent_id=$1"#,
-        id,
-    ).fetch_all(&state.pool)
-    .await;
-    let children = match result {
-        Ok(children) => children,
-        Err(err) => {
-            tracing::error!("Failed: {:?}", err);
-            vec![]
-        }
-    };
-    ChildrenTemplate {
-        children,
-        error_message: None,
-        success_message: None,
-        current_page: "categories".to_string(),
-    }
-}
 // ============================================================================
 // HANDLERS: LIVE SEARCH
 // ============================================================================

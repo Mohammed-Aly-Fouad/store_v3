@@ -1,0 +1,54 @@
+<div class="cards-grid">
+            {% for category in category_tree %}
+            <article class="card">
+                <header class="card__header">
+                    <h3 class="card__title">{{ category.main.name_ar }}</h3>
+                    <span class="card__counter">({{ category.subs.len() }})</span>
+                </header>
+
+                <div class="card__body">
+                    {% if !category.subs.is_empty() %}
+                    <ol class="card__sub-list">
+                        {% for sub in category.subs %}
+                        <li class="card__sub-item">
+                            <p>
+                                {{ sub.name_ar }}
+                            </p>
+
+                        </li>
+                        {% endfor %}
+                    </ol>
+                    {% else %}
+                    <p class="card__empty-note">لا يوجد فئات فرعية</p>
+                    {% endif %}
+                </div>
+
+                <footer class="card__footer">
+                    <time datetime="{{ category.main.created_at.format(" %Y-%m-%d") }}" class="card__date">
+                        {{ category.main.created_at.format("%Y-%m-%d") }}
+                    </time>
+                    <div class="card__actions">
+
+                        {% if category.subs.is_empty()%}
+                        <a href="/web/categories/{{ category.main.id }}/edit" class="btn btn--sm btn--text">تعديل</a>
+
+
+
+
+
+
+                        <form action="/web/categories/{{ category.main.id }}/delete" method="POST"
+                            class="inline-form delete-form">
+                            <button type="submit" class="btn btn--sm btn--danger-text">حذف</button>
+                        </form>
+                        {% else %}
+                        <a href="/web/categories/{{ category.main.id }}" class="btn btn--sm btn--text">تعديل</a>
+                        {% endif %}
+
+                    </div>
+                </footer>
+            </article>
+            {% else %}
+            <p class="cards-grid__empty">من فضلك اضغط على زر إضافة لإضافة فئات جديدة</p>
+            {% endfor %}
+        </div>
