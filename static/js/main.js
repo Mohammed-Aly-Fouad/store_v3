@@ -54,3 +54,14 @@ document.addEventListener('keydown', function (event) {
         if (dropdown) dropdown.innerHTML = '';
     }
 });
+
+
+
+document.querySelectorAll('.delete-form').forEach(form => {
+    form.addEventListener('submit', function(e) {
+        const confirmed = confirm('تنبيه: هل أنت متأكد من رغبتك في حذف هذه الفئة؟');
+        if (!confirmed) {
+            e.preventDefault(); // Stop form submission
+        }
+    });
+});
