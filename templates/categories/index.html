@@ -109,6 +109,17 @@
 
                             {% if category.subs.is_empty()%}
                             <a href="/web/categories/{{ category.main.id }}/edit" class="btn btn--sm btn--text">تعديل</a>
+
+
+
+                            <!-- <button 
+    hx-delete="/web/categories/{{ category.main.id }}/delete" 
+    hx-confirm="تنبيه: هل أنت متأكد من حذف هذه الفئة؟ قد يؤدي ذلك لتأثر البيانات المرتبطة بها."
+    class="btn btn-danger">
+    حذف
+</button> -->
+
+
                            <form action="/web/categories/{{ category.main.id }}/delete" method="POST" class="inline-form">
                                 <button type="submit" class="btn btn--sm btn--danger-text">حذف</button>
                             </form>

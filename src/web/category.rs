@@ -6,7 +6,7 @@ use axum::extract::{Path, Query, State};
 use axum::http::StatusCode;
 use axum::http::header::CACHE_CONTROL;
 use axum::response::{IntoResponse, Redirect, Response};
-use axum::routing::{get, post};
+use axum::routing::{delete, get, post};
 use axum::{Extension, Form, Json, Router};
 use sqlx::encode::IsNull::No;
 
@@ -29,6 +29,7 @@ pub fn router() -> Router<AppState> {
         .route("/{id}", get(render_main_category_details_page))
         .route("/{id}/edit", get(render_edit_category_form))
         .route("/{id}/edit", post(edit_category))
+        .route("/{id}/delete", post(delete_category))
         .route("/search", get(search_categories))
 }
 //#########################################
@@ -255,9 +256,8 @@ async fn create_category(
         }
     }
 }
-//#########################################
-//########## render main category details page     ###############################
-//#########################################
+//##################           render main category details page        #######################
+//###############################################################################################
 async fn render_main_category_details_page(
     State(state): State<AppState>,
     Path(id): Path<i64>,
@@ -280,7 +280,6 @@ async fn render_main_category_details_page(
     }.into_response()
 }
 
-//#########################################
 //########## render edit form     ###############################
 //#########################################
 
@@ -348,7 +347,6 @@ let all_categories = match get_all_categories(&state).await {
 }
 
 
-//#########################################
 //########## Edit Category handler     ###############################
 //#########################################
 
@@ -463,10 +461,37 @@ async fn edit_category(
         }
     }
 
-        //    Json("Good to go").into_response()
     }
-            
-// ###########################################
+        
+
+        //##################           delete category       #######################
+//###############################################################################################
+
+async fn delete_category(
+    State(state): State<AppState>,
+    Path(id): Path<i64>,
+) -> Response {
+    let delete_result = sqlx::query!(r#"DELETE FROM categories WHERE id = $1"#, id)
+        .execute(&state.pool)
+        .await;
+
+    match delete_result {
+        Ok(_) => {
+            Redirect::to("/web/categories?action=deleted").into_response()
+        }
+        Err(sqlx::Error::Database(db_err)) if db_err.code().as_deref() == Some("23503") => {
+            // إعادة التوجيه مع بيان وجود سجلات مرتبطة بالفئة
+            Redirect::to("/web/categories?error=has_children").into_response()
+        }
+        Err(err) => {
+            tracing::error!("Error deleting category {}: {:?}", id, err);
+            Redirect::to("/web/categories?error=delete_failed").into_response()
+        }
+    }
+}
+
+
+
 async fn show_category(
     State(state): State<AppState>,
     Path(id): Path<i64>,
