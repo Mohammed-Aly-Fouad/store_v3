@@ -433,7 +433,37 @@ async fn edit_category(
 .execute(&state.pool)
 .await;
 
-           Json("Ed").into_response()
+    match update_result {
+        Ok(_) => 
+        return Redirect::to("/web/categories?action=updated").into_response(),
+
+        Err(sqlx::Error::Database(db_err)) if db_err.code().as_deref() == Some("23505") => {
+         return EditFormPage {
+            category_tree,
+            id,
+            form: submitted_form,
+            errors: None,
+            current_page: "categories".to_string(),
+           error_message: Some("هذا البيان مسجل بالفعل".to_string()),
+            success_message: None,
+        }.into_response()
+        }
+
+        Err(err) => {
+            tracing::error!("فشل تحديث العلامة التجارية ذات المعرف {}: {:?}", id, err);
+         return EditFormPage {
+            category_tree,
+            id,
+            form: submitted_form,
+            errors: None,
+            current_page: "categories".to_string(),
+           error_message: Some("حدث خطأ عام .. برجاء المحاولة لاحقاً".to_string()),
+            success_message: None,
+        }.into_response()
+        }
+    }
+
+        //    Json("Good to go").into_response()
     }
             
 // ###########################################
