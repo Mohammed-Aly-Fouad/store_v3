@@ -25,8 +25,8 @@ pub fn router() -> Router<AppState> {
         .route("/", get(render_categories_page))
         .route("/", post(create_category))
         .route("/new", get(render_new_category_page))
-        .route("/{id}", get(render_category_detail_page))
-        .route("/{id}/edit", get(render_edit_category_page))
+        .route("/{id}", get(render_main_category_details_page))
+        .route("/{id}/edit", get(render_edit_category_form))
         .route("/search", get(search_categories))
 }
 //#########################################
@@ -230,9 +230,9 @@ async fn create_category(
     }
 }
 //#########################################
-//########## render category page     ###############################
+//########## render main category details page     ###############################
 //#########################################
-async fn render_category_detail_page(
+async fn render_main_category_details_page(
     State(state): State<AppState>,
     Path(id): Path<i64>,
     Query(params): Query<FlashParams>,
@@ -258,7 +258,7 @@ async fn render_category_detail_page(
 //########## render edit page     ###############################
 //#########################################
 
-async fn render_edit_category_page(
+async fn render_edit_category_form(
     State(state): State<AppState>,
     Path(id): Path<i64>,
     Query(params): Query<FlashParams>,
