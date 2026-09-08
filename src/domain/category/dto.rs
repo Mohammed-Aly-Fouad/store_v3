@@ -172,7 +172,7 @@ pub struct CategoryDetailTemplate {
 
 #[derive(Template, WebTemplate)]
 #[template(path = "categories/category_create_form.html")]
-pub struct FormPage {
+pub struct CreateFormPage {
     pub category_tree: Vec<CategoryTree>,
     pub form: CategoryFormDTO,
     pub errors: Option<CategoryFormErrors>,
@@ -189,7 +189,8 @@ pub struct EditFormPage {
     pub errors: Option<CategoryFormErrors>,
     pub current_page: String,
     pub error_message: Option<String>,
-    pub success_message: Option<String>
+    pub success_message: Option<String>,
+    pub id: i64,
 }
 
 #[derive(Template, WebTemplate)]

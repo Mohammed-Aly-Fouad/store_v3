@@ -63,7 +63,7 @@
                 {% endif %}
             </div>
         </section>
-         <form method="post" action="/web/categories">
+         <form method="post" action="/web/categories/{{id}}/edit">
 <div class="field">
     <label for="name_en">الاسم بالإنجليزية</label>
     <input type="text" id="name_en" name="name_en" placeholder="e.g. Pencils" value="{{ form.name_en }}">
@@ -114,7 +114,8 @@
 </div>
 
 <div class="form-actions" style="margin-top: 1.5rem; display: flex; gap: 1rem;">
-        <button type="submit" class="btn btn-primary">إضافة الفئة</button>
+    <button type="submit" class="btn btn-primary">تعديل الفئة</button>
+        <!-- <button type="submit" class="btn btn-primary">تعديل الفئة</button> -->
         <a href="/web/categories" class="btn btn-ghost">إلغاء</a>
       </div>
 

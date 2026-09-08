@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 use std::ptr::null;
+use std::result;
 
 use axum::extract::{Path, Query, State};
 use axum::http::StatusCode;
@@ -11,7 +12,7 @@ use sqlx::encode::IsNull::No;
 
 use crate::domain::category;
 use crate::domain::category::dto::{
-    CategoryDetailTemplate, CategoryFormDTO, CategoryResponseDTO, CategorySearchQuery, CategorySearchResultsTemplate, CategoryTemplate, CategoryTree, ChildrenTemplate, FlashParams, FormPage,
+    CategoryDetailTemplate, CategoryFormDTO, CategoryResponseDTO, CategorySearchQuery, CategorySearchResultsTemplate, CategoryTemplate, CategoryTree, ChildrenTemplate, CreateFormPage, EditFormPage, FlashParams,
 };
 use crate::main;
 use crate::state::{self, AppState};
@@ -27,6 +28,7 @@ pub fn router() -> Router<AppState> {
         .route("/new", get(render_new_category_page))
         .route("/{id}", get(render_main_category_details_page))
         .route("/{id}/edit", get(render_edit_category_form))
+        .route("/{id}/edit", post(edit_category))
         .route("/search", get(search_categories))
 }
 //#########################################
@@ -80,6 +82,30 @@ ORDER BY c.parent_id IS NOT NULL, c.id DESC;
     .fetch_all(&state.pool)
     .await
 }
+
+
+//#########################################
+//#########  fetch category by id  ################################
+//#########################################
+
+async fn fetch_category_by_id(
+    state: &AppState,
+    id: i64,
+) -> Result<CategoryFormDTO, sqlx::Error> {
+    sqlx::query_as!(
+        CategoryFormDTO,
+        r#"SELECT
+        c.name_en,
+        c.name_ar,
+        c.notes,
+        p.name_ar AS "parent_name?"
+    FROM categories c
+    LEFT JOIN categories p ON c.parent_id = p.id
+    WHERE c.id = $1"#,
+    id,
+    ).fetch_one(&state.pool)
+    .await
+}
 //#########################################
 //########## render categories page     ###############################
 //#########################################
@@ -129,7 +155,7 @@ async fn render_new_category_page(
     Query(params): Query<FlashParams>,
 ) -> impl IntoResponse {
     match get_all_categories(&state).await {
-        Ok(all_categories) => FormPage {
+        Ok(all_categories) => CreateFormPage {
             category_tree: CategoryTree::build_tree(all_categories),
             form: CategoryFormDTO::default(),
             errors: None,
@@ -138,7 +164,7 @@ async fn render_new_category_page(
             error_message: None,
         },
 
-        Err(err) => FormPage {
+        Err(err) => CreateFormPage {
             category_tree: Vec::new(),
             form: CategoryFormDTO::default(),
             errors: None,
@@ -170,7 +196,7 @@ async fn create_category(
     match form.validate(&category_tree) {
         Err(err) => {
             tracing::error!("فشل التحقق من صحة النموذج: {:#?}", err);
-            return FormPage {
+            return CreateFormPage {
                 form,
                 category_tree,
                 error_message: Some("من فضلك عدل الأخطاء لاستكمال التسجيل".to_string()),
@@ -203,7 +229,7 @@ async fn create_category(
                 Ok(_) => Redirect::to("/web/categories?action=created").into_response(),
                 Err(sqlx::Error::Database(db_err)) if db_err.code().as_deref() == Some("23505") => {
                     let err_msg = format!("الفئة \"{}\" مسجلة بالفعل", form.name_ar);
-                    return FormPage {
+                    return CreateFormPage {
                         form,
                         category_tree,
                         error_message: Some(err_msg),
@@ -215,7 +241,7 @@ async fn create_category(
                 }
                 Err(err) => {
                     tracing::error!("خطأ عام: {:#?}", err);
-                    return FormPage {
+                    return CreateFormPage {
                         form,
                         category_tree,
                         error_message: None,
@@ -255,7 +281,7 @@ async fn render_main_category_details_page(
 }
 
 //#########################################
-//########## render edit page     ###############################
+//########## render edit form     ###############################
 //#########################################
 
 async fn render_edit_category_form(
@@ -297,13 +323,14 @@ let all_categories = match get_all_categories(&state).await {
                
             };
 
-  FormPage {
+  EditFormPage {
                             form,
                             category_tree,
                             error_message: None,
                             success_message: None,
                             errors: None,
                             current_page: "categories".to_string(),
+                            id,
                         }
                         .into_response()
 
@@ -320,6 +347,76 @@ let all_categories = match get_all_categories(&state).await {
     
 }
 
+
+//#########################################
+//########## Edit Category handler     ###############################
+//#########################################
+
+async fn edit_category(
+    State(state): State<AppState>,
+    Path(id): Path<i64>,
+    Form(mut form): Form<CategoryFormDTO>
+) -> Response {
+
+    let mut submitted_form = form;
+
+    let existing_cat = match fetch_category_by_id(&state, id).await {
+        Ok(cat) => cat,
+        Err(e) => {
+            tracing::error!(?e, "Failedto fetch category");
+            return (
+                axum::http::StatusCode::INTERNAL_SERVER_ERROR, "Internal server errore",
+            ).into_response()
+        }
+    };
+    
+    let all_categories = match get_all_categories(&state).await {
+        Ok(categories) => categories,
+        Err(err) => {
+            tracing::error!("فشل جلب الفئات: {:#?}", err);
+            return Redirect::to("/web/categories?error=server_error").into_response();
+        }
+    };
+
+    let category_tree = CategoryTree::build_tree(all_categories); 
+
+    submitted_form.sanitize();
+
+    if let Err(form_err) = submitted_form.validate(&category_tree) {
+        return EditFormPage {
+            category_tree,
+            id,
+            form: submitted_form,
+            errors: Some(form_err),
+            current_page: "categories".to_string(),
+            error_message: Some("يرجى تصحيح الأخطاء لإستكمال التعديل".to_string()),
+            success_message: None,
+        }
+        .into_response();
+    }
+
+        let is_unchanged =
+        existing_cat.name_ar == submitted_form.name_ar
+        && existing_cat.name_en == submitted_form.name_en
+        &&  existing_cat.parent_name == submitted_form.parent_name
+        && existing_cat.notes == submitted_form.notes;
+
+        
+        if is_unchanged {
+            return EditFormPage {
+            category_tree,
+            id,
+            form: submitted_form,
+            errors: None,
+            current_page: "categories".to_string(),
+           error_message: Some("لم يتم إجراء أي تغييرات على البيانات".to_string()),
+            success_message: None,
+        }.into_response()
+        }
+        
+           Json("Ed").into_response()
+    }
+            
 // ###########################################
 async fn show_category(
     State(state): State<AppState>,
