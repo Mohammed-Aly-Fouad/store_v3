@@ -401,7 +401,7 @@ async fn edit_category(
         &&  existing_cat.parent_name == submitted_form.parent_name
         && existing_cat.notes == submitted_form.notes;
 
-        
+
         if is_unchanged {
             return EditFormPage {
             category_tree,
@@ -414,6 +414,25 @@ async fn edit_category(
         }.into_response()
         }
         
+        let update_result = sqlx::query!(
+    r#"
+    UPDATE categories
+    SET
+        name_en = $1,
+        name_ar = $2,
+        parent_id = (SELECT id FROM categories WHERE name_ar = $3 LIMIT 1),
+        notes = $4
+    WHERE id = $5
+    "#,
+    &submitted_form.name_en,
+    &submitted_form.name_ar,
+    submitted_form.parent_name.as_deref(),
+    submitted_form.notes.as_deref(),
+    id,
+)
+.execute(&state.pool)
+.await;
+
            Json("Ed").into_response()
     }
             
