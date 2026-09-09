@@ -1,3 +1,4 @@
 /target
 **/.env
 **/.sqlx/ (optional, though .sqlx is often committed if using offline mode)
+codes_sheet.md

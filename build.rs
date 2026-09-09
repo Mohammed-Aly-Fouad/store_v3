@@ -13,6 +13,7 @@ fn main() {
         "static/css/components/search.css",
         // "static/css/components/buttons.css",
         "static/css/components/form.css",
+        "static/css/components/aside.css",
         // "static/css/components/modal.css",
         // "static/css/components/toast.css",
         // "static/css/components/sidebar.css",

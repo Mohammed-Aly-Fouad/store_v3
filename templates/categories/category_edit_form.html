@@ -20,7 +20,7 @@
         </div>
 
         <div class="header__action">
-            <a href="/web/categories" class="btn btn--primary" >
+            <a href="/web/categories" class="btn btn--primary">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -63,63 +63,66 @@
                 {% endif %}
             </div>
         </section>
-         <form method="post" action="/web/categories/{{id}}/edit">
-<div class="field">
-    <label for="name_en">الاسم بالإنجليزية</label>
-    <input type="text" id="name_en" name="name_en" placeholder="e.g. Pencils" value="{{ form.name_en }}">
-    {% if let Some(errs) = errors %}
-    {% if let Some(err) = errs.name_en %}
-    <span class="error-message" style="color: #dc2626; font-size: 0.85rem; margin-top: 4px; display: block;">
-        {{ err }}
-    </span>
-    {% endif %}
-    {% endif %}
-</div>
-<div class="field">
-    <label for="name_ar">الاسم بالعربية</label>
-    <input type="text" id="name_ar" name="name_ar" placeholder="e.g. قلم رصاص" value="{{ form.name_ar }}">
-    {% if let Some(errs) = errors %}
-    {% if let Some(err) = errs.name_ar %}
-    <span class="error-message" style="color: #dc2626; font-size: 0.85rem; margin-top: 4px; display: block;">
-        {{ err }}
-    </span>
-    {% endif %}
-    {% endif %}
-</div>
-<!-- الملاحظات -->
-<div class="field" style="margin-top: 1rem;">
-    <label for="notes">ملاحظات (اختياري)</label>
-    <textarea id="notes" name="notes"
-        placeholder="أي ملاحظات إضافية عن الفئة">{% if let Some(notes) = form.notes %}{{ notes }}{% endif %}</textarea>
-    {% if let Some(errs) = errors %}
-    {% if let Some(err) = errs.notes %}
-    <span class="error-message" style="color: #dc2626; font-size: 0.85rem; margin-top: 4px; display: block;">
-        {{ err }}
-    </span>
-    {% endif %}
-    {% endif %}
-</div>
-<div class="field">
-<label for="parent_name">اختر الفئة</label>
-<select id="parent_name"  name="parent_name">
-    <option value="" {% if form.parent_name.is_none() %}selected{% endif %}>فئة رئيسية</option>
+        <form method="post" action="/web/categories/{{id}}/edit">
+            <div class="field">
+                <label for="name_en">الاسم بالإنجليزية</label>
+                <input type="text" id="name_en" name="name_en" placeholder="e.g. Pencils" value="{{ form.name_en }}">
+                {% if let Some(errs) = errors %}
+                {% if let Some(err) = errs.name_en %}
+                <span class="error-message"
+                    style="color: #dc2626; font-size: 0.85rem; margin-top: 4px; display: block;">
+                    {{ err }}
+                </span>
+                {% endif %}
+                {% endif %}
+            </div>
+            <div class="field">
+                <label for="name_ar">الاسم بالعربية</label>
+                <input type="text" id="name_ar" name="name_ar" placeholder="e.g. قلم رصاص" value="{{ form.name_ar }}">
+                {% if let Some(errs) = errors %}
+                {% if let Some(err) = errs.name_ar %}
+                <span class="error-message"
+                    style="color: #dc2626; font-size: 0.85rem; margin-top: 4px; display: block;">
+                    {{ err }}
+                </span>
+                {% endif %}
+                {% endif %}
+            </div>
+            <!-- الملاحظات -->
+            <div class="field" style="margin-top: 1rem;">
+                <label for="notes">ملاحظات (اختياري)</label>
+                <textarea id="notes" name="notes"
+                    placeholder="أي ملاحظات إضافية عن الفئة">{% if let Some(notes) = form.notes %}{{ notes }}{% endif %}</textarea>
+                {% if let Some(errs) = errors %}
+                {% if let Some(err) = errs.notes %}
+                <span class="error-message"
+                    style="color: #dc2626; font-size: 0.85rem; margin-top: 4px; display: block;">
+                    {{ err }}
+                </span>
+                {% endif %}
+                {% endif %}
+            </div>
+            <div class="field">
+                <label for="parent_name">اختر الفئة</label>
+                <select id="parent_name" name="parent_name">
+                    <option value="" {% if form.parent_name.is_none() %}selected{% endif %}>فئة رئيسية</option>
 
-    {% for category in category_tree %}
-        {% let is_selected = form.parent_name.as_deref() == Some(category.main.name_ar.as_str()) %}
-        <option value="{{ category.main.name_ar }}" {% if is_selected %}selected{% endif %}>
-            {{ category.main.name_ar }}
-        </option>
-    {% endfor %}
-</select>
-</div>
+                    {% for category in category_tree %}
+                    {% let is_selected = form.parent_name.as_deref() == Some(category.main.name_ar.as_str()) %}
+                    <option value="{{ category.main.name_ar }}" {% if is_selected %}selected{% endif %}>
+                        {{ category.main.name_ar }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
 
-<div class="form-actions" style="margin-top: 1.5rem; display: flex; gap: 1rem;">
-    <button type="submit" class="btn btn-primary">تعديل الفئة</button>
-        <!-- <button type="submit" class="btn btn-primary">تعديل الفئة</button> -->
-        <a href="/web/categories" class="btn btn-ghost">إلغاء</a>
-      </div>
+            <div class="form-actions" style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+                <button type="submit" class="btn btn-primary">تعديل الفئة</button>
+                <!-- <button type="submit" class="btn btn-primary">تعديل الفئة</button> -->
+                <a href="/web/categories" class="btn btn-ghost">إلغاء</a>
+            </div>
 
-    </form>
+        </form>
     </main>
 
     <footer class="page-footer">

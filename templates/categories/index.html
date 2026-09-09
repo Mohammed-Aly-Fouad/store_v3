@@ -3,20 +3,17 @@
 {% include "components/header.html"%}
 {% endblock %}
 
-{% block aside %}
-{% include "components/aside.html"%}
-{% endblock %}
+
+
 {% block main_content %}
-<main class="main-content">
+
     <section class="categories">
         <div class="categories__header">
             <h2 class="categories__title">الفئات الرئيسية</h2>
             <span class="categories__counter">({{ category_tree.len() }})</span>
         </div>
-        {% include "components/flash_messages.html" %}
+        
         {% include "components/card.html" %}
 
     </section>
-</main>
-{% include "components/footer.html" %}
 {% endblock %}
