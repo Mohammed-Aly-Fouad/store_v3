@@ -36,13 +36,13 @@
 
 {% block main_content %}
 
-<section class="categories">
-    <div class="categories__header">
-        <h2 class="categories__title">الفئات الرئيسية</h2>
-        <span class="categories__counter">({{ category_tree.len() }})</span>
+<section class="collection">
+    <div class="collection__info">
+        <h2 class="collection__title">الفئات الرئيسية</h2>
+        <span class="collection__counter">({{ category_tree.len() }})</span>
     </div>
 
-    {% include "components/card.html" %}
+    {% include "components/collection_grid.html" %}
 
 </section>
 {% endblock %}
