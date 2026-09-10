@@ -2,9 +2,16 @@
         <nav class="nav">
             <ul class="nav__list">
                 <li class="nav__item">
-                    {% if current_page== "categories"%}
-                    <a href="/web/categories" class="nav__link nav__link--active mohammed">إدارة الفئات</a>
-                    {% endif %}
+                   
+                    <a href="/web/categories" class="nav__link 
+                     {% if current_page == "categories"%} nav__link--active {% endif %}">إدارة الفئات</a>
+                   
+                </li>
+                <li class="nav__item">
+                   
+                    <a href="/web/products" class="nav__link 
+                     {% if current_page == "products"%} nav__link--active {% endif %}">إدارة الأصناف</a>
+                   
                 </li>
             </ul>
         </nav>

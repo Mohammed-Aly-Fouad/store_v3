@@ -3,9 +3,10 @@ use std::default;
 use axum::routing::get;
 use axum::{Json, Router};
 use axum::extract::{Query, State};
-use axum::response::{IntoResponse, Response};
+use axum::response::{IntoResponse, Redirect, Response};
 
-use crate::domain::product::dto::ProductResponseDTO;
+use crate::domain::{category, product};
+use crate::domain::product::dto::{ProductResponseDTO, ProductTemplate};
 use crate::state::{self, AppState};
 
 use crate::web::category::get_all_categories;
@@ -38,7 +39,6 @@ pub async fn get_all_products(
 }
 
 
-
 async fn render_products_page(
     State(state): State<AppState>,
     Query(params): Query<FlashParams>,
@@ -56,10 +56,35 @@ async fn render_products_page(
         _ => None,
     };
 
+    let products = match get_all_products(&state).await {
+        Ok(products) => products,
+        Err(err) => {
+            tracing::error!("فشل جلب الفئات: {:#?}", err);
+            return Redirect::to("/web/products?error=server_error").into_response();
+        }
+    };
+
+
+    let all_categories = match get_all_categories(&state).await {
+        Ok(categories) => categories,
+        Err(err) => {
+            tracing::error!("فشل جلب الفئات: {:#?}", err);
+            return Redirect::to("/web/products?error=server_error").into_response();
+        }
+    };
+
+    let category_tree = CategoryTree::build_tree(all_categories);
+
+   return  ProductTemplate {
+    products,
+    category_tree,
+    error_message: None,
+    success_message: None,
+    current_page: "products".to_string(),
+    }.into_response()
+
+    
+    
     
 
-  
-
-
-    Json("hello from product page").into_response()
 }
