@@ -1,8 +1,10 @@
 {% extends "base.html" %}
+<!--############# head tag #################-->
 
 {% block head_title %}مكتب نور - إدارة الفئات{% endblock %}
 
 {% block head %}{% endblock %}
+<!--############# body / header tag #################-->
 
 {% block header_info %}
 <div class="header__info">
@@ -33,6 +35,7 @@
     </a>
 </div>
 {% endblock %}
+<!--############# body / main tag #################-->
 
 {% block main_content %}
 
@@ -41,8 +44,11 @@
         <h2 class="collection__title">الفئات الرئيسية</h2>
         <span class="collection__counter">({{ category_tree.len() }})</span>
     </div>
+    <!--############# body / collection grid #################-->
+<div class="collection-grid">
+    {% include "components/collection_card.html" %}
 
-    {% include "components/collection_grid.html" %}
+</div>
 
 </section>
 {% endblock %}

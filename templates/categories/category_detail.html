@@ -68,10 +68,10 @@
 
         <!-- Loop through Vec<CategoryTree> inside <main> -->
          {% for category in category_tree %} 
-        <section class="categories">
-            <div class="categories__header">
-                <h2 class="categories__title">{{ category.main.name_ar }}</h2>
-                <span class="categories__counter">({{ category.subs.len() }})</span>
+        <section class="collection">
+            <div class="collection__header">
+                <h2 class="collection__title">{{ category.main.name_ar }}</h2>
+                <span class="collection__counter">({{ category.subs.len() }})</span>
                 <div class="card__actions">
                         <!-- ده ممكن ميكنش ليه لزمة لأن لو الفئة ملهاش فروع بيدخل على طول على الإيديتنج، ولو ليها بيدخل على العرض-->
                             {% if category.subs.is_empty()%}
@@ -87,7 +87,7 @@
             </div>
 
             {% if !category.subs.is_empty() %}
-            <div class="cards-grid">
+            <div class="collection-grid">
                 {% for sub in category.subs %}
                 <article class="card">
                     <header class="card__header">
