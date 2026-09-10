@@ -36,7 +36,7 @@ pub fn router() -> Router<AppState> {
 //#########  get all categories handler  ################################
 //#########################################
 
-async fn get_all_categories(state: &AppState) -> Result<Vec<CategoryResponseDTO>, sqlx::Error> {
+pub async fn get_all_categories(state: &AppState) -> Result<Vec<CategoryResponseDTO>, sqlx::Error> {
     sqlx::query_as!(
         CategoryResponseDTO,
         r#"

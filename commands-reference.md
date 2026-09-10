@@ -4,8 +4,9 @@
 ```bash
 sqlx database create              # Create the database defined in DATABASE_URL
 sqlx migrate run                  # Apply all pending migrations
-sqlx migrate add your_file_name   # Generate a new empty migration file
 cargo sqlx prepare                # Cache query metadata for offline mode (sqlx-data.json)
+
+sqlx migrate add your_file_name   # Generate a new empty migration file
 sqlx database drop                # Drop the database defined in DATABASE_URL
 sqlx database create              # Recreate the database
 sqlx migrate run                  # Re-apply all migrations to the fresh database
@@ -103,4 +104,15 @@ DELETE FROM _sqlx_migrations WHERE version = 20260825060932;
 ```rust
 // Pretty-print a debug-formatted value to the tracing info log
 tracing::info!("main_categories:\n{main_categories:#?}");
+```
+## Rust import
+```bash
+# 1. Direct path to file
+use crate::domain::products::dto::ProductDTO;
+
+# 2. Shortened path (if re-exported in products/mod.rs with `pub use dto::*;`)
+use crate::domain::products::ProductDTO;
+
+# 3. Importing multiple items from the same module
+use crate::domain::products::dto::{CreateProductDTO, ProductResponseDTO};
 ```

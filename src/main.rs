@@ -1,12 +1,9 @@
 mod web;
 // mod common;
 mod domain;
-
-
 mod startup;
 mod state;
 use std::net::SocketAddr;
-
 use axum::Router;
 use dotenvy::dotenv;
 use tower_http::{cors::{Any, CorsLayer}, services::ServeDir};

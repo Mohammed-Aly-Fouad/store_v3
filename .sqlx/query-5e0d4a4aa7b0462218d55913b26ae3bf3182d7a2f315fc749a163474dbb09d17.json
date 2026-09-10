@@ -1,0 +1,40 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT\n        c.name_en,\n        c.name_ar,\n        c.notes,\n        p.name_ar AS \"parent_name?\"\n    FROM categories c\n    LEFT JOIN categories p ON c.parent_id = p.id\n    WHERE c.id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "name_en",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "name_ar",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "notes",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "parent_name?",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      false
+    ]
+  },
+  "hash": "5e0d4a4aa7b0462218d55913b26ae3bf3182d7a2f315fc749a163474dbb09d17"
+}

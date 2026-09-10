@@ -1,0 +1,56 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT\n            c.id,\n            c.name_en,\n            c.name_ar,\n            c.parent_id,\n            c.notes,\n            c.created_at,\n            c.updated_at\n        FROM categories c\n        ORDER BY c.id DESC;\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 1,
+        "name": "name_en",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "name_ar",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "parent_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 4,
+        "name": "notes",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 6,
+        "name": "updated_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      true,
+      false,
+      false
+    ]
+  },
+  "hash": "6728f5668eb6205c2a99cdfd67493d5a782678b9383c20532867827f3d930355"
+}

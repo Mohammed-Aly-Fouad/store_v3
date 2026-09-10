@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "SELECT id, name_ar, name_en, parent_id, notes, created_at, updated_at FROM categories WHERE parent_id=$1",
+  "query": "\n        SELECT\n    c.id,\n    c.name_en,\n    c.name_ar,\n    c.parent_id,\n    c.notes,\n    c.created_at,\n    c.updated_at\nFROM categories c\nWHERE c.id = $1 OR c.parent_id = $1\nORDER BY c.parent_id IS NOT NULL, c.id DESC;\n        ",
   "describe": {
     "columns": [
       {
@@ -10,12 +10,12 @@
       },
       {
         "ordinal": 1,
-        "name": "name_ar",
+        "name": "name_en",
         "type_info": "Varchar"
       },
       {
         "ordinal": 2,
-        "name": "name_en",
+        "name": "name_ar",
         "type_info": "Varchar"
       },
       {
@@ -54,5 +54,5 @@
       false
     ]
   },
-  "hash": "dfcdc01fa301c2207b2f6c4d3576ae0f3cfffd4c37a05702be83180dcaae6aa5"
+  "hash": "a9cea3a981eb04800a40a4c161ea7cf0fc66c403c45450467c005fdd91fcac67"
 }
