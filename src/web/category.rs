@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::mem::transmute;
 use std::ptr::null;
 use std::result;
 
@@ -264,7 +265,11 @@ async fn render_main_category_details_page(
     Query(params): Query<FlashParams>,
 ) -> impl IntoResponse {
     let node = match get_category_branch(&state, id).await {
-        Ok(categories) => categories,
+        Ok(categories) =>  {
+            
+            tracing::info!(?categories);
+            categories
+        },
         Err(err) => {
             tracing::error!("فشل جلب الفئات: {:#?}", err);
             return Redirect::to("/web/categories?error=server_error").into_response();

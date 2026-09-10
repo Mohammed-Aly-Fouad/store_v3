@@ -33,3 +33,18 @@
     </a>
 </div>
 {% endblock %}
+<!--############# body / main tag #################-->
+ {% block main_content %}
+<section class="collection">
+<div class="collection__info">
+        <h2 class="collection__title">الأصناف الرئيسية</h2>
+        <span class="collection__counter">({{ products.len() }})</span>
+    </div>
+<div class="collection-grid">
+
+    {% include "products/card.html" %}
+
+</div>
+</section>
+
+ {% endblock %}

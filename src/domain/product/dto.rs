@@ -35,11 +35,22 @@ pub struct ProductResponseDTO {
 #[derive(Template, WebTemplate)]
 #[template(path = "products/index.html")]
 pub struct ProductTemplate {
-    pub products: Vec<ProductResponseDTO>,
-    pub category_tree: Vec<CategoryTree>,
+    pub products: Vec<ProductWithCategoryDTO>,
     pub error_message: Option<String>,
     pub success_message: Option<String>,
     pub current_page: String,
 }
 
 
+#[derive(Debug)]
+pub struct ProductWithCategoryDTO {
+    pub id: i64,
+    pub category_id: i64,
+    pub name_ar: String,
+    pub name_en: String,
+    pub notes: Option<String>,
+    pub created_at: DateTime<Utc>,
+    pub updated_at: DateTime<Utc>,
+    pub category_name_ar: String,
+    pub parent_category_name_ar: Option<String>, // SQLx maps LEFT JOIN results to Option
+}
