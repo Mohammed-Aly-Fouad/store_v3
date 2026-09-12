@@ -113,7 +113,7 @@ impl FormDTO {
         self.notes = self.notes.take().map(|s| s.trim().to_string());
     }
 
-    pub fn validate(&self, category_tree: &[CategoryTree]) -> Result<(), FormErrors> {
+    pub fn validate(&self, categories_list: &[SubCategoriesList]) -> Result<(), FormErrors> {
         let mut errors = FormErrors::default();
 
         let name_ar = self.name_ar.trim();
@@ -131,7 +131,13 @@ impl FormDTO {
                 Some("This filed is not allowed to be more than 100 character".to_string());
         }
 
-        let category = self.category.trim();
+       let category = self.category.trim();
+
+if category.is_empty() {
+    errors.category = Some("القسم غير موجود".to_string());
+} else if !categories_list.iter().any(|c| c.name_ar == category) {
+    errors.category = Some("القسم المختار غير موجود".to_string());
+}
         
 
         if let Some(notes) = self.notes.as_deref() {

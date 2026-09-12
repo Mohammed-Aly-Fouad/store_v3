@@ -1,7 +1,7 @@
 use std::default;
 
-use axum::routing::get;
-use axum::{Json, Router};
+use axum::routing::{get, post};
+use axum::{Form, Json, Router};
 use axum::extract::{Query, State};
 use axum::response::{IntoResponse, Redirect, Response};
 
@@ -16,6 +16,7 @@ pub fn router() -> Router<AppState> {
     
     Router::new()
     .route("/", get(render_products_page))
+    .route("/", post(create_product))
     .route("/new", get(render_new_product_page))
 }
 
@@ -153,13 +154,10 @@ async fn render_new_product_page(
     }
    }
 
-
-
-// #[axum::debug_handler]
-// async fn render_new_product_page(
-//     State(state): State<AppState>,
-//     Query(params): Query<FlashParams>,
-// ) impl IntoResponse {
-
-
-// }
+async fn create_product(
+    State(state): State<AppState>,
+    Query(params): Query<FlashParams>,
+    Form(mut form): Form<FormDTO>
+) -> Response {
+    Json("بسم الله الرحمن الرحيم").into_response()
+}

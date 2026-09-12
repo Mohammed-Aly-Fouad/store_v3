@@ -71,7 +71,7 @@
             </div>
         </section>
 
-         <form method="post" action="/web/categories">
+         <form method="post" action="/web/products">
 <div class="field">
     <label for="name_en">الاسم بالإنجليزية</label>
     <input type="text" id="name_en" name="name_en" placeholder="e.g. Pencils" value="{{ form.name_en }}">
@@ -117,3 +117,18 @@
 {% endfor %}
     </select>
 </div>
+
+<div class="form-actions" style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+        <button type="submit" class="btn btn-primary">إضافة الصنف</button>
+        <a href="/web/products" class="btn btn-ghost">إلغاء</a>
+      </div>
+
+    </form>
+    </main>
+
+    <footer class="page-footer">
+        <p>جميع الحقوق محفوظة لمكتب نور</p>
+    </footer>
+</body>
+
+</html>
