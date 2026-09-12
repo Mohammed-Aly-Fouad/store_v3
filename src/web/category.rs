@@ -267,7 +267,6 @@ async fn render_main_category_details_page(
     let node = match get_category_branch(&state, id).await {
         Ok(categories) =>  {
             
-            tracing::info!(?categories);
             categories
         },
         Err(err) => {

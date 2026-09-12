@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إدارة الفئات - مكتب نور</title>
+    <title>إدارة الأصناف - مكتب نور</title>
     <script src="/static/js/main.js" defer></script>
     <link rel="stylesheet" href="/static/css/main.css">
 </head>
@@ -12,21 +12,21 @@
 <body class="page-layout">
     <header class="header">
         <div class="header__info">
-            <h1 class="header__title">إدارة الفئات</h1>
+            <h1 class="header__title">إدارة الأصناف</h1>
         </div>
         <div class="header__search">
             <input type="search" name="header-search" id="header-search" class="header__search-input"
-                placeholder="بحث عن فئة..." aria-label="بحث عن فئة">
+                placeholder="بحث عن صنف..." aria-label="بحث عن صنف">
         </div>
 
         <div class="header__action">
-            <a href="/web/categories" class="btn btn--primary" >
+            <a href="/web/products" class="btn btn--primary" >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <line x1="12" y1="5" x2="12" y2="19"></line>
                     <line x1="5" y1="12" x2="19" y2="12"></line>
                 </svg>
-                <span>الرجوع إلى الفئات الرئيسية</span>
+                <span>الرجوع إلى الأصناف</span>
             </a>
         </div>
     </header>
@@ -50,14 +50,12 @@
             </ul>
         </nav>
     </aside>
-
-    <main class="main-content">
+<main class="main-content">
         <section class="categories">
             <div class="categories__header">
                 <h2 class="categories__title">الفئات الرئيسية</h2>
-                <span class="categories__counter">({{ category_tree.len() }})</span>
+                <span class="categories__counter">({{ categories_list.len() }})</span>
             </div>
-
             <div class="flash-messages">
                 {% if let Some(msg) = success_message %}
                 <div role="status" class="flash flash--success show">
@@ -72,6 +70,7 @@
                 {% endif %}
             </div>
         </section>
+
          <form method="post" action="/web/categories">
 <div class="field">
     <label for="name_en">الاسم بالإنجليزية</label>
@@ -95,6 +94,7 @@
     {% endif %}
     {% endif %}
 </div>
+
 <!-- الملاحظات -->
 <div class="field" style="margin-top: 1rem;">
     <label for="notes">ملاحظات (اختياري)</label>
@@ -110,30 +110,10 @@
 </div>
 
 <div class="field">
-<label for="parent_name">اختر الفئة</label>
-<select id="parent_name"  name="parent_name">
-    <option value="" {% if form.parent_name.is_none() %}selected{% endif %}>فئة رئيسية</option>
-
-    {% for category in category_tree %}
-        {% let is_selected = form.parent_name.as_deref() == Some(category.main.name_ar.as_str()) %}
-        <option value="{{ category.main.name_ar }}" {% if is_selected %}selected{% endif %}>
-            {{ category.main.name_ar }}
-        </option>
-    {% endfor %}
-</select>
+    <label for="category">الفئات</label>
+    <select name="category" id="">
+{% for category in categories_list %}
+<option value="category.name_ar">{{category.name_ar}}</option>
+{% endfor %}
+    </select>
 </div>
-
-<div class="form-actions" style="margin-top: 1.5rem; display: flex; gap: 1rem;">
-        <button type="submit" class="btn btn-primary">إضافة الفئة</button>
-        <a href="/web/categories" class="btn btn-ghost">إلغاء</a>
-      </div>
-
-    </form>
-    </main>
-
-    <footer class="page-footer">
-        <p>جميع الحقوق محفوظة لمكتب نور</p>
-    </footer>
-</body>
-
-</html>
